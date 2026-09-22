@@ -14,10 +14,20 @@ menu.addEventListener("click", () => {
     open ? "Close navigation" : "Open navigation",
   );
 });
-matchMedia("(min-width: 761px)").addEventListener("change", closeMenu);
-nav
-  .querySelectorAll("a")
-  .forEach((a) => a.addEventListener("click", closeMenu));
+matchMedia("(min-width: 901px)").addEventListener("change", closeMenu);
+nav.querySelectorAll("a").forEach((a) =>
+  a.addEventListener("click", () => {
+    closeMenu();
+    const target = document.querySelector(a.hash);
+    if (target) {
+      target.tabIndex = -1;
+      target.focus({ preventScroll: true });
+    }
+  }),
+);
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".header")) closeMenu();
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && nav.classList.contains("open")) {
     closeMenu();
@@ -25,9 +35,11 @@ document.addEventListener("keydown", (event) => {
   }
 });
 document.querySelectorAll("[data-interest]").forEach((control) =>
-  control.addEventListener("click", () => {
+  control.addEventListener("click", (event) => {
+    event.preventDefault();
+    $("#email-inquiry").open = true;
     $("#interest").value = control.dataset.interest;
-    $("#visit").scrollIntoView({
+    $("#email-inquiry").scrollIntoView({
       behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
         ? "auto"
         : "smooth",
@@ -35,6 +47,21 @@ document.querySelectorAll("[data-interest]").forEach((control) =>
     $("#interest").focus({ preventScroll: true });
   }),
 );
+function revealInquiryFromHash() {
+  if (location.hash === "#email-inquiry") $("#email-inquiry").open = true;
+}
+revealInquiryFromHash();
+window.addEventListener("hashchange", revealInquiryFromHash);
+$(".header").addEventListener("focusout", (event) => {
+  if (!event.currentTarget.contains(event.relatedTarget)) closeMenu();
+});
+$("#inquiry-form").addEventListener("input", () => {
+  if (!$("#form-result").hidden) {
+    $("#form-result").hidden = true;
+    $("#form-status").textContent =
+      "Details changed. Prepare a new email to update your draft.";
+  }
+});
 document.querySelectorAll("img[data-source]").forEach((img) => {
   const fallback = () => {
     img.hidden = true;
@@ -58,14 +85,14 @@ $("#inquiry-form").addEventListener("submit", (event) => {
     return;
   }
   const interest = String(d.get("interest"));
-  const body = `Hello Phuong Jewelry,\n\nMy name is ${name}. I’m interested in ${interest.toLowerCase()}.\n\n${message}\n\nYou can reach me at ${email}.\n\nThank you,\n${name}`;
+  const body = `Hello Phuong Jewelry,\n\nMy name is ${name}. I’m interested in ${interest.toLowerCase()}.\n\n${message}${email ? `\n\nYou can reach me at ${email}.` : ""}\n\nThank you,\n${name}`;
   $("#email-link").href =
     `mailto:phuongjewelry@gmail.com?subject=${encodeURIComponent("Jewelry inquiry: " + interest)}&body=${encodeURIComponent(body)}`;
   $("#email-draft").value = body;
   $("#form-result").hidden = false;
   $("#form-status").textContent =
     "Draft prepared. Your message has not been sent.";
-  $("#email-link").focus({ preventScroll: true });
+  $("#email-link").focus();
 });
 $("#copy-draft").addEventListener("click", async () => {
   try {

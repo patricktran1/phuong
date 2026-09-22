@@ -1,6 +1,6 @@
 # Phuong Jewelry
 
-A responsive, photo-led website for the family jeweler in Oakland Chinatown. This continues the existing cream, burgundy and brass implementation, with authentic archive photography, attributed customer reviews and an inquiry flow. It is not an online inventory or checkout system.
+A responsive, photo-led website for the family jeweler in Oakland Chinatown. This continues the existing implementation with an ivory, charcoal and restrained gold palette, with authentic archive photography, attributed customer reviews and an inquiry flow. It is not an online inventory or checkout system.
 
 ## Run
 
@@ -17,6 +17,7 @@ Use the HTTP server instead of opening the HTML directly: styles, scripts and ph
 ## What is implemented
 
 - Responsive editorial layout with a pearl-photo hero, jade gallery, jeweler portrait, Yelp entrance photo and prominent call/directions links.
+- Persistent navigation, clear service names, 44px-or-larger primary controls, visible keyboard focus, mobile call/directions actions, and an expandable email inquiry with optional email address and stale-draft protection.
 - Four locally served archive photographs, source links, descriptive alternative text and failure fallbacks. Original image lettering/borders are retained. Photos do not imply current availability.
 - Two short five-star Yelp excerpts with author, date, review permalink, verification date and selection disclosure. Individual stars were verified in Roadtrippers' syndicated Yelp feed; no five-star aggregate is claimed.
 - Direct links to the shop's Yelp and Google Maps photos/reviews.
@@ -47,11 +48,11 @@ The API has synthetic unit and browser tests, **not a verified live connection**
 
 Import this repository with framework preset **Other**, repository root as the root directory, no install/build command, and no output-directory override. The static page/assets and `/api/google-reviews` are compatible with Vercel's static hosting and Node.js functions. `vercel.json` supplies baseline security response headers.
 
-A Vercel deployment was not created or validated during this update. If the repository is already linked, a push to its configured production branch may trigger deployment. Verify the resulting site and `/api/google-reviews` on Vercel; without environment variables the endpoint should return `{"configured":false}` and the Google load button should remain hidden.
+The repository is already connected to the Vercel project `phuong`. Its production address is https://phuong-self.vercel.app and GitHub pushes to `main` trigger production deployments. The production site and review endpoint were checked on September 22, 2026; the endpoint returned `{"configured":false}`. Domain purchase is not required to keep the existing Vercel deployment working. A custom domain has not been added in this update.
 
 ## Current status and launch checklist
 
-The site remains in review status with `noindex,nofollow`. No deployment status, payment integration, stock synchronization, live Google connection, owner approval or photo license is claimed.
+The site remains in review status with `noindex,nofollow`. Production deployment is connected and verified; no payment integration, stock synchronization, live Google connection, owner approval or photo license is claimed.
 
 1. Confirm owner-approved copy, services, contact details and photo reuse rights. Attribution does not grant commercial permission; replace archive images with approved originals where needed.
 2. Confirm that the shop monitors `phuongjewelry@gmail.com`. The form only prepares a draft for the visitor's own email app.
@@ -69,7 +70,7 @@ python3 -m playwright install chromium
 python3 tests/browser_check.py
 ```
 
-`npm test` runs 24 dependency-free tests for content/source integrity, attribution, configuration, business matching, Google response safety and photo resolution. The browser suite uses real HTTP navigation at 320, 390, 768, 1024, 1440 and 1920 pixels; it checks local images, navigation, email drafts, dialogs, failed photos and synthetic Google success/filter/empty/error states.
+`npm test` runs 24 dependency-free tests for content/source integrity, attribution, configuration, business matching, Google response safety and photo resolution. The browser suite uses real HTTP navigation at 320, 390, 768, 1024, 1440 and 1920 pixels; it checks local images, navigation, keyboard focus, inquiry disclosure, optional email, stale-draft invalidation, dialogs, failed photos and synthetic Google success/filter/empty/error states.
 
 Optional `CHROMIUM_PATH` overrides the browser binary. Optional `SCREENSHOT_DIR` saves full-page 390px and 1440px screenshots. No customer message or review is submitted by tests.
 

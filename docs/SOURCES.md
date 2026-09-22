@@ -63,6 +63,14 @@ The implementation has synthetic tests, not a verified live API connection. Conf
 ## Other references and remaining launch items
 
 - [Vercel Node.js functions](https://vercel.com/docs/functions/runtimes/node-js). The repository remains a no-build static site with one optional server function.
-- Italiana and DM Sans are requested through Google Fonts. No font binaries are redistributed.
+- Cormorant Garamond and DM Sans are requested through Google Fonts. No font binaries are redistributed.
 
 Before launch: owner-approved copy and photo rights, current business contact details and hours, real inventory/prices if commerce is added, Google configuration if desired, hosted testing, verified domain, and removal of staging `noindex,nofollow` only after approval. The site remains inquiry-only; the email form prepares a draft and does not send or book anything.
+
+## Design and deployment update
+
+The September 22 UX refresh retains the established content and source assets while replacing burgundy with ivory, charcoal and restrained gold. The source records and review selection disclosures are preserved. Services are easier to scan; the inquiry form is revealed on request, an email address is optional, and edited details invalidate an older draft.
+
+The practical accessibility references were [WCAG 2.2](https://www.w3.org/TR/WCAG22/) and W3C guidance on [contrast](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum), [target size](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), and [unobscured focus](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html). Automated checks supplement responsive and keyboard checks; no full WCAG certification is claimed.
+
+The connected Vercel account confirmed project `phuong` and production alias https://phuong-self.vercel.app. Git integration deploys `main`; the production page and disabled Google endpoint both returned HTTP 200. This supersedes the earlier note that deployment status was unverified. Google Places remains unconfigured.
