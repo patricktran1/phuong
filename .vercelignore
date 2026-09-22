@@ -1,0 +1,5 @@
+tests/
+docs/
+README.md
+server.mjs
+.env.example
