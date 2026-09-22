@@ -1,72 +1,76 @@
 # Phuong Jewelry
 
-A photo-led, responsive website rebuild for Phuong Jewelry in Oakland Chinatown. Built directly for this repository, replacing the earlier illustrated mockup.
+A responsive, photo-led website for the family jeweler in Oakland Chinatown. This continues the existing cream, burgundy and brass implementation, with authentic archive photography, attributed customer reviews and an inquiry flow. It is not an online inventory or checkout system.
 
 ## Run
 
-Node.js 22 or later. No npm packages or build step are required.
+Node.js 22 or later. No npm dependencies or build step are required.
 
 ```sh
 npm start
-# Open http://localhost:4173
+# http://localhost:4173
 npm test
 ```
 
-You can also open `index.html` directly. The optional server-side Google reviews feature is unavailable in file previews and on static-only hosting.
+Use the HTTP server instead of opening the HTML directly: styles, scripts and photography are served from `/assets/`.
 
 ## What is implemented
 
-- Cream, burgundy, and brass editorial layout with responsive navigation.
-- Two authentic, externally hosted business photographs: a Yelp entrance photo and a larger historical storefront photo from the community fundraiser.
-- Links to the shop's full Yelp photo gallery. No stock or illustrated jewelry is presented as the shop's inventory.
-- Two short, attributed Yelp review excerpts, with dates and source links. No star score is invented or attached to either excerpt.
-- Jewelry interests, services, directions, tap-to-call contact, and an inquiry email-draft tool.
-- Accessible labels, keyboard controls, dialogs, reduced-motion support, and graceful external-image fallbacks.
-- An optional Google Places review adapter, disabled until configured. It validates the business name, street address, city, and phone before displaying data.
+- Responsive editorial layout with a pearl-photo hero, jade gallery, jeweler portrait, Yelp entrance photo and prominent call/directions links.
+- Four locally served archive photographs, source links, descriptive alternative text and failure fallbacks. Original image lettering/borders are retained. Photos do not imply current availability.
+- Two short five-star Yelp excerpts with author, date, review permalink, verification date and selection disclosure. Individual stars were verified in Roadtrippers' syndicated Yelp feed; no five-star aggregate is claimed.
+- Direct links to the shop's Yelp and Google Maps photos/reviews.
+- Jewelry-interest controls, services and an accessible email-draft form. Nothing is sent, stored or booked by the form.
+- Mobile navigation with keyboard/Escape support, reduced motion, source/privacy dialogs and mobile contact controls.
+- Optional server-side Google reviews **and photos**, with business-identity verification, contributor attribution, source links, safe errors and an explicit five-star filter that leaves the true overall rating unchanged.
 
-## Current status
+The source, styles and interaction code are in `index.html`, `assets/site.css` and `assets/site.js`. `server.mjs` serves the same assets locally and exposes the optional function for testing. `docs/SOURCES.md` records factual and visual provenance; `docs/QA.md` records testing.
 
-This is a review-stage implementation, not a launched online store. `noindex,nofollow` is intentionally set. No public deployment, domain change, payment setup, owner approval, or live Google API connection has been performed.
+## Google reviews and photos — optional, not yet connected
 
-The inquiry form prepares an email to the publicly listed `phuongjewelry@gmail.com`. It does not send messages, store submissions, or confirm appointments. The visitor must send the draft using their own email application. Confirm the shop monitors this inbox before launch.
-
-Yelp blocked direct access to its full photo gallery. One Yelp entrance photo was independently accessible through Giftly. Google review text and a current Google rating could not be independently retrieved, so no Google testimonials or rating were hardcoded. Google and Yelp links remain available.
-
-## Google reviews, optional
-
-The Vercel-style function is `api/google-reviews.js`. The local server also supports this endpoint.
-
-Configure these **server-side** environment variables only:
+The Vercel function is `api/google-reviews.js`. Configure these **server-side** Vercel environment variables:
 
 ```text
 GOOGLE_PLACES_API_KEY=
 GOOGLE_PLACE_ID=
 ```
 
-Use the verified place ID for **Phuong Jewelry, 808 Franklin Street, Oakland, (510) 835-8288**. Enable Places API (New) on the owner's Google Cloud project. Restrict the key to the required API, set billing alerts and request quotas, and enable host-level rate limiting before public activation. Never put the key in HTML or GitHub.
+Use the verified place ID for **Phuong Jewelry, 808 Franklin Street, Oakland, (510) 835-8288**. The public Google Maps listing uses CID `11681540897637741024`; a CID is **not** a Places API place ID. Enable Places API (New) on the owner's Google Cloud project and restrict the key to the necessary API. Set request quotas, billing alerts and host-level rate limiting before public activation. Never put keys in HTML or GitHub.
 
-An availability check does not call Google. A visitor's explicit click on “Show Google reviews” initiates the Places lookup. Responses use `Cache-Control: no-store`; no review data is written to disk. Google-selected reviews retain original-language excerpts, author attribution, profile links, available avatar images, source links, and dates. Current Google display requirements are linked in `docs/SOURCES.md`; review them before enabling the feature publicly.
+The initial availability check makes no Google request. A visitor's explicit click on “Show Google reviews & photos” requests business details and up to two photo-media lookups. No form information is included. Google responses use `Cache-Control: no-store`; no review/photo content is persisted. A photo failure does not prevent reviews from displaying.
 
-This adapter has synthetic-fixture tests, not a verified live connection. API charges, billing limits, live business matching, attribution rendering, and real Google data must be checked on the owner's account before launch.
+Default review order is Google's relevance order, with up to five returned excerpts. A visitor may choose “Show only five-star reviews.” The UI discloses this selection and gives an empty state if no returned review qualifies. It does not relabel the overall rating or fabricate positive reviews. Authors, available profile pictures, profile links, review/photo source links and Google Maps attribution accompany the content.
 
-## Hosting
+The API has synthetic unit and browser tests, **not a verified live connection**. No credentials were added and no paid Google requests were made. Check real responses, business matching, attribution, billing and quotas on the owner's account before activation.
 
-The static site can be served by a conventional static host. To retain the optional Google endpoint, import this repository into Vercel with framework preset “Other” and Node.js 22 or later. The included `vercel.json` supplies baseline response headers. Deployment has not been performed or tested here.
+## Vercel deployment
 
-## Before public launch
+Import this repository with framework preset **Other**, repository root as the root directory, no install/build command, and no output-directory override. The static page/assets and `/api/google-reviews` are compatible with Vercel's static hosting and Node.js functions. `vercel.json` supplies baseline security response headers.
 
-1. Have the owners approve copy, services, contact details, and photography. Source attribution does not establish permission to reuse a photograph commercially.
-2. Replace external photo URLs with approved, locally hosted originals. Obtain actual product photos with verified availability, metal, stone, dimensions, and prices.
-3. Verify current hours, the email inbox, and any domain before use. Do not restore or link the old domain without checking its ownership and destination.
-4. Test the hosted site with real photos and mobile devices, then remove the staging `noindex,nofollow` tag and add the approved domain's canonical URL, sitemap, and social preview.
-5. Add real commerce only after the owners choose a payment processor and confirm inventory, pickup/shipping, tax, returns, resizing, and fulfillment arrangements. No simulated cart or checkout is included.
+A Vercel deployment was not created or validated during this update. If the repository is already linked, a push to its configured production branch may trigger deployment. Verify the resulting site and `/api/google-reviews` on Vercel; without environment variables the endpoint should return `{"configured":false}` and the Google load button should remain hidden.
+
+## Current status and launch checklist
+
+The site remains in review status with `noindex,nofollow`. No deployment status, payment integration, stock synchronization, live Google connection, owner approval or photo license is claimed.
+
+1. Confirm owner-approved copy, services, contact details and photo reuse rights. Attribution does not grant commercial permission; replace archive images with approved originals where needed.
+2. Confirm that the shop monitors `phuongjewelry@gmail.com`. The form only prepares a draft for the visitor's own email app.
+3. Verify current hours and any domain. Hours and founding-year sources disagree, so neither is asserted precisely.
+4. Check the hosted site on real devices, then remove the staging robots tag and add the approved canonical domain/social metadata when launch is approved.
+5. Add commerce only after inventory, specifications, prices, payments, taxes, fulfillment and store policies are confirmed.
 
 ## Tests
 
-`npm test` runs 19 dependency-free Node tests covering metadata, source assets, links, JavaScript parsing, unavailable reviews, business matching, response safety, and attribution.
+```sh
+npm test
+# Optional browser suite:
+python3 -m pip install playwright
+python3 -m playwright install chromium
+python3 tests/browser_check.py
+```
 
-`python tests/browser_check.py` runs optional Playwright DOM checks with Chromium. It requires Python Playwright and a browser binary; set `CHROMIUM_PATH` when needed. The recorded run checks 320, 390, 768, and 1440 pixel layouts, the inquiry flow, dialogs, and image failure behavior. Browser navigation was restricted in the build environment, so the checks used `set_content`; external photos and fonts were intentionally blocked. See `docs/QA.md` for exact limitations.
+`npm test` runs 24 dependency-free tests for content/source integrity, attribution, configuration, business matching, Google response safety and photo resolution. The browser suite uses real HTTP navigation at 320, 390, 768, 1024, 1440 and 1920 pixels; it checks local images, navigation, email drafts, dialogs, failed photos and synthetic Google success/filter/empty/error states.
 
-## Source record
+Optional `CHROMIUM_PATH` overrides the browser binary. Optional `SCREENSHOT_DIR` saves full-page 390px and 1440px screenshots. No customer message or review is submitted by tests.
 
-See `docs/SOURCES.md`. Third-party photographs, trademarks, and customer text remain with their respective rights holders. No blanket license is granted for them by this repository.
+Third-party photographs, trademarks and review text remain with their respective rights holders; this repository grants no blanket license for them.
